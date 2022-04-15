@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CURD Operation</title>
+</head>
+<style>
+     label{
+        font-size: 1.2rem;
+     }
+     table ,tr, th{
+         border: 1px solid black;
+         border-radius: 5px;
+         padding: 10px;
+         border-spacing: 10px;
+     }
+</style>
+<body>
+    <h1><center>CURD Operation</center></h1>
+    <hr><hr>
+    <div class="e-form">
+       <center><form onsubmit="event.preventDefault(); onFormSubmit();" autocomplete="off">
+            <div><br><br><br>
+                <label>Name</label><label class="validation-error hide" id="fullNameValidationError"></label>
+                <input type="text" name="name" id="name">
+            </div><br>
+            <div>
+                <label>Email</label>
+                <input type="text" name="email" id="email">
+            </div><br>
+            <div>
+                <label>Age</label>
+                <input type="text" name="age" id="age">
+            </div><br>
+            <div class="submit">
+                <input type="submit" value="submit">
+            </div><br><br>
+        </form></center>
+    </div>
+    <br>
+    <hr>
+    <hr><br>
+   <center>
+    <div class="etabel">
+        <table class="list" id="elist">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Age</th>
+                </tr>
+            </thead>
+            <tbody>
+
+            </tbody>
+        </table>
+    </div>
+   </center> 
+</body>
+<script>
+    var selectrow=null
+    function onFormSubmit(){
+        if(validate()){
+            var formdata=readFormData();
+            if(selectrow==null)
+                insertrecord(formdata);
+            else
+            updaterecord(formdata);
+            resetform();
+        }
+    }
+    function readFormData(){
+        var formdata={};
+        formdata['name']=document.getElementById('name').value;
+        formdata['email']=document.getElementById('email').value;
+        formdata['age']=document.getElementById('age').value;
+        return formdata;
+}
+function insertrecord(data){
+    var table = document.getElementById("elist").getElementsByTagName('tbody')[0];
+    var nrow=table.insertRow(table.length);
+    cell1=nrow.insertCell(0);
+    cell1.innerHTML=data.name;
+    cell2=nrow.insertCell(1);
+    cell2.innerHTML=data.email;
+    cell3=nrow.insertCell(2);
+    cell3.innerHTML=data.age;
+    cell4=nrow.insertCell(3)
+    cell4.innerHTML= `<a onClick="onEdit(this)">Edit</a>
+    <a onClick=onDelete(this)>Delete</a>`;
+}
+function resetform(){
+    document.getElementById("name").value='';
+    document.getElementById('email').value='';
+    document.getElementById('age').value='';
+    selectrow=null;
+}
+function onEdit(td){
+    selectrow=td.parentElement.parentElement;
+    document.getElementById('name').value=selectrow.cells[0].innerHTML;
+    document.getElementById('email').value=selectrow.cells[1].innerHTML;
+    document.getElementById('age').value=selectrow.cells[2].innerHTML;
+}
+function updaterecord(formdata)
+{
+    selectrow.cells[0].innerHTML=formdata.name;
+    selectrow.cells[1].innerHTML=formdata.email;
+    selectrow.cells[2].innerHTML=formdata.age;
+}
+function onDelete(td){
+    if(confirm('Are you sure to delete this record ?')){
+        row=td.parentElement.parentElement;
+        document.getElementById('elist').deleteRow(row.rowIndex);
+        resetform();
+    }
+
+}
+function validate(){
+    isValid=true;
+    if(document.getElementById('name').value==''){
+        isValid=false;
+        document.getElementById('fullNameValidationError').classList.remove('hide');
+    }
+    else{
+        isValid=true;
+        if(!document.getElementById('fullNameValidationError').classList.contains('hide'))
+        document.getElementById('fullNameValidationError').classList.add('hide');
+       }
+       return isValid;
+}
+
+</script>
+</html>
